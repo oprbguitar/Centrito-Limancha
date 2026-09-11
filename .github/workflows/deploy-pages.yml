@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    # Todos los días a las 06:00 de Lima: renueva comercios (OSM) y precios (catálogos VTEX).
+    - cron: '0 11 * * *'
   workflow_dispatch:
 
 permissions:
@@ -29,6 +32,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Refresh data (OSM + precios)
+        # Si una fuente falla, el script conserva el corte versionado en public/data.
+        continue-on-error: true
+        run: node scripts/scrape.mjs
 
       - name: Build site
         run: npm run build

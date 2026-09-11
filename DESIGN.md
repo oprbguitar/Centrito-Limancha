@@ -1,88 +1,52 @@
-# Buscando barato · Dirección visual
+# Buscando barato · Dirección visual (v0.2)
 
 ## Superficie e intención
 
-- **Modo:** `explore`.
-- **Usuario principal:** personas que compran para su negocio o buscan abastecerse en Lima Centro.
-- **Tarea principal:** ubicar corredores comerciales alrededor de la avenida Abancay, filtrar por tipo de proveedor y producto, y abrir la fuente pública antes de planificar una visita.
-- **Decisión clave:** separar un punto geográfico de una afirmación de precio, disponibilidad o formalidad. Esta primera versión solo muestra referencias web.
+- **Modo:** `explore` (asignado por `design-pick`).
+- **Usuario principal:** quien compra para su negocio o se abastece en Lima Centro, antes o durante el recorrido.
+- **Tareas:** 1) ver qué hay hoy en cada zona, 2) filtrar por canal (mayor/menor) y tipo de producto, 3) verificar si un precio ofrecido es razonable.
+- **Decisión clave:** separar siempre un punto del mapa de una afirmación de stock o de precio; toda cifra lleva fuente y fecha.
 
 ## Dirección elegida
 
-- **Arquetipo:** mapa protagonista + rail de facetas + lista maestra de resultados.
-- **Tipografía:** Space Grotesk para la marca y titulares; Noto Sans para lectura y controles; Space Mono para metadatos y estados.
-- **Paleta:** acero + verde eléctrico para una superficie de exploración operativa; azul como apoyo de mapa y enlaces.
-- **Geometría:** recta, bordes de 1px y radio máximo de 2px. Sin sombras decorativas.
-- **Motion:** seco, 120–160ms, reservado a selección, foco y cambios de estado.
+- **Arquetipo:** barra de comando (fecha + estado del barrido) → búsqueda con zona y canal → franja de zonas con conteos reales → tabla maestra + mapa + ficha de detalle. El verificador es una pestaña con veredicto y tabla de ofertas.
+- **Alternativas descartadas:** mapa a pantalla completa con cajón (esconde la comparación), tablero de tarjetas por zona (repetitivo, poca densidad), asistente paso a paso (lento para uso recurrente).
+- **Tipografía:** Space Grotesk (titulares, controles), Noto Sans (lectura), Space Mono (cifras, estados, metadatos).
+- **Paleta:** arena + índigo. El índigo marca acción, selección y “por mayor”; el ocre marca “por menor”; la tinta marca galerías y mercados. Verde y rojo solo para el estado SUNAT y el veredicto de precio.
+- **Geometría:** 2px; chips de estado a 999px.
+- **Motion:** mínimo. Transiciones de color y borde a 140 ms; parpadeo del indicador de barrido. Todo se anula con `prefers-reduced-motion`.
 
 ## Tokens
 
 ```css
---ink: #161a1d;
---ink-soft: #586168;
---surface: #f2f4f5;
---surface-2: #ffffff;
---line: #c9d0d4;
---accent: #2f9e44;
---accent-ink: #ffffff;
---support: #1971c2;
---ok: #2f9e44;
---warn: #c87818;
---danger: #bd3a32;
---info: #1971c2;
---font-display: "Space Grotesk", sans-serif;
---font-body: "Noto Sans", sans-serif;
---font-mono: "Space Mono", monospace;
---fs-display: clamp(2.25rem, 4vw, 3.5rem);
---fs-h1: clamp(1.75rem, 2.6vw, 2.5rem);
---fs-h2: 1.5rem;
---fs-h3: 1.25rem;
---fs-h4: 1.0625rem;
---fs-body: 1rem;
---fs-ui: 0.9375rem;
---fs-label: 0.8125rem;
---fs-caption: 0.75rem;
---lh-tight: 1.15;
---lh-heading: 1.25;
---lh-body: 1.6;
---sp-1: 4px;
---sp-2: 8px;
---sp-3: 12px;
---sp-4: 16px;
---sp-5: 24px;
---sp-6: 32px;
---sp-7: 48px;
---sp-8: 64px;
---radius: 2px;
---border: 1px;
---shadow: 0 8px 24px rgba(22, 26, 29, 0.08);
---dur: 140ms;
---ease: cubic-bezier(.2, .8, .2, 1);
+--ink: #1B1B2F;  --ink-soft: #595967;
+--surface: #F8F5EF;  --surface-2: #FFFFFF;  --surface-3: #EFEAE0;
+--line: #D9D2C3;  --line-strong: #1B1B2F;
+--accent: #3B5BDB;  --accent-strong: #2C47B8;  --accent-soft: #E7ECFC;
+--support: #B5651D;  --support-soft: #F6E9DC;
+--ok: #2B7A3D;  --warn: #9A5A12;  --danger: #B42828;
+--ch-mayorista: #3B5BDB;  --ch-minorista: #B5651D;  --ch-galeria: #1B1B2F;
+--font-display: "Space Grotesk";  --font-body: "Noto Sans";  --font-mono: "Space Mono";
+--fs-h1: clamp(1.5rem, 2.2vw, 2rem);  --fs-h2: 1.25rem;  --fs-h3: 1.0625rem;
+--fs-body: 1rem;  --fs-ui: .9375rem;  --fs-label: .8125rem;  --fs-caption: .75rem;  --fs-micro: .6875rem;
+--sp-1..7: 4 / 8 / 12 / 16 / 24 / 32 / 48 px
+--radius: 2px;  --radius-pill: 999px;  --dur: 140ms;  --control-h: 44px;
 ```
 
-## Composición y componentes
+## Estados
 
-- Barra superior compacta con marca, estado de fuente abierta y acción de limpiar filtros.
-- Encabezado editorial corto que explica el límite de la primera versión.
-- Rail lateral de búsqueda y facetas persistentes.
-- Mapa Leaflet con teselas OpenStreetMap, límite visual de trabajo y marcadores por tipo de zona.
-- Lista maestra con filas comparables; cada fila muestra tipo, productos, procedencia y enlace de contraste.
-- Banda de procedencia que evita confundir referencias web con precios, inventario o validación municipal.
+- **Barrido:** `loading` (índigo parpadeante), `live` (verde), `snapshot` (ocre, cuando Overpass no responde).
+- **Filas:** hover (arena), seleccionada (`aria-current`, fondo índigo suave + borde izquierdo).
+- **Facetas y zonas:** `aria-pressed`; facetas sin resultados quedan `disabled`.
+- **Botones:** hover, active, focus-visible (anillo índigo 2px), disabled/`aria-busy` durante el barrido.
 
-## Responsive y accesibilidad
+## Responsive
 
-- 360 px: una sola columna; controles a ancho completo; el mapa precede a la lista.
-- 768 px: rail estrecho y mapa/lista apilados con separación mínima.
-- 1280 px: rail + mapa + lista en una composición de trabajo.
-- 1600 px: el contenido mantiene un ancho legible y el mapa recibe el mayor peso visual.
-- Todos los controles tienen foco visible, etiqueta asociada, estados disabled/selected y objetivos táctiles de al menos 44 px.
-- El color no es el único indicador: los tipos incluyen texto y formas distintas.
-- `prefers-reduced-motion` elimina transiciones y animaciones no esenciales.
-
-## Datos y límites intencionales
-
-Los puntos iniciales son zonas o complejos comerciales, no un padrón exhaustivo de puestos. La categoría y el catálogo se derivan de páginas públicas enlazadas en cada resultado y aparecen como **referencia web**. No se muestran precios ni disponibilidad hasta contar con levantamiento verificable.
+- **1600 px:** ancho máximo; tres columnas (facetas 220 px · tabla · mapa + ficha).
+- **1280 px:** mismas tres columnas con facetas de 200 px; la franja de zonas mantiene 7 columnas.
+- **768 px:** facetas a la izquierda; tabla arriba, mapa y ficha debajo; zonas en 4 columnas; canal a ancho completo.
+- **360 px:** una columna; el mapa va primero, las zonas se desplazan en horizontal, las facetas pasan a chips y cada fila muestra nombre/canal arriba y zona/SUNAT abajo.
 
 ## Anti-patrones evitados
 
-No hay hero SaaS, métricas decorativas, rejilla repetitiva de tarjetas, degradados, glassmorphism, radios grandes ni cifras inventadas. La interfaz prioriza el mapa y una lista de decisiones concretas.
+Sin hero, sin tarjetas de métricas decorativas, sin degradados, sin glassmorphism, sin radios grandes y sin cifras inventadas: los conteos por zona y por giro se calculan del barrido del momento.
