@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f2f4f5" />
+    <meta name="description" content="Buscando barato: mapa de referencias comerciales de Lima Centro." />
+    <title>Buscando barato · Lima Centro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23161a1d'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='monospace' font-size='13' font-weight='700' fill='white'%3Ebb%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="Buscando barato, inicio">
+          <span class="brand-mark" aria-hidden="true">bb</span>
+          <span>
+            <span class="brand-name">buscando barato</span>
+            <span class="brand-meta">mapa de proveedores · lima centro</span>
+          </span>
+        </a>
+        <div class="topbar-actions">
+          <span class="source-status"><span class="status-dot" aria-hidden="true"></span> fuente abierta</span>
+          <button class="button button-quiet" id="reset-filters" type="button">Limpiar filtros</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="page-title">
+          <div class="intro-copy">
+            <p class="eyebrow">LIMA CENTRO / PRIMERA VERSIÓN</p>
+            <h1 id="page-title">Buscando barato en Lima Centro.</h1>
+            <p class="intro-lede">Un mapa de corredores comerciales alrededor de Abancay para ubicar quién vende qué, antes de salir a recorrer la zona.</p>
+          </div>
+          <div class="intro-note">
+            <span class="note-index">01</span>
+            <p>Explora por tipo de proveedor o producto. Los resultados son referencias públicas; todavía no son precios ni inventario.</p>
+          </div>
+        </section>
+
+        <section class="explorer" aria-label="Explorador de proveedores de Lima Centro">
+          <aside class="filter-rail" aria-label="Filtros de búsqueda">
+            <div class="rail-heading">
+              <p class="eyebrow">EXPLORAR ZONA</p>
+              <h2>¿Qué necesitas encontrar?</h2>
+            </div>
+
+            <form class="filters" id="filters-form">
+              <div class="field field-search">
+                <label for="search-input">Buscar por nombre o producto</label>
+                <div class="search-control">
+                  <span class="search-glyph" aria-hidden="true">⌕</span>
+                  <input id="search-input" name="search" type="search" placeholder="Ej. celulares, ferretería…" autocomplete="off" />
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="provider-select">Tipo de proveedor</label>
+                <select id="provider-select" name="provider">
+                  <option value="all">Todos los tipos</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="product-select">Qué venden</label>
+                <select id="product-select" name="product">
+                  <option value="all">Todos los productos</option>
+                </select>
+              </div>
+
+              <div class="filter-divider" aria-hidden="true"></div>
+
+              <div class="filter-future">
+                <div>
+                  <p class="field-label">Próximamente</p>
+                  <p class="field-help">Rangos de precio, compra por volumen y datos enviados por comerciantes.</p>
+                </div>
+                <span class="coming-soon">Fase 02</span>
+              </div>
+
+              <button class="button button-primary" type="submit">
+                <span>Aplicar búsqueda</span>
+                <span aria-hidden="true">↗</span>
+              </button>
+            </form>
+
+            <div class="rail-footer">
+              <span class="mono-label">ÁREA ACTIVA</span>
+              <strong>Lima Centro · alrededor de Abancay</strong>
+              <button class="text-button" id="center-map" type="button">Centrar mapa <span aria-hidden="true">+</span></button>
+            </div>
+          </aside>
+
+          <section class="map-panel" aria-labelledby="map-title">
+            <div class="panel-bar">
+              <div>
+                <p class="eyebrow">MAPA DE REFERENCIA</p>
+                <h2 id="map-title">Corredor comercial de Lima Centro</h2>
+              </div>
+              <span class="map-count" id="map-count">0 puntos</span>
+            </div>
+            <div class="map-wrap">
+              <div id="map" role="application" aria-label="Mapa interactivo de Lima Centro con puntos comerciales"></div>
+              <div class="map-legend" aria-label="Leyenda del mapa">
+                <span class="legend-item"><i class="legend-dot legend-green" aria-hidden="true"></i> comercio general</span>
+                <span class="legend-item"><i class="legend-dot legend-blue" aria-hidden="true"></i> tecnología</span>
+                <span class="legend-item"><i class="legend-dot legend-orange" aria-hidden="true"></i> ferretería</span>
+              </div>
+              <div class="map-scope"><span class="scope-line" aria-hidden="true"></span><span>zona de trabajo</span></div>
+            </div>
+            <div class="map-footer">
+              <span><span class="pulse" aria-hidden="true"></span> Referencias públicas activas</span>
+              <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">Mapa © OpenStreetMap</a>
+            </div>
+          </section>
+
+          <section class="results-panel" aria-labelledby="results-title">
+            <div class="results-heading">
+              <div>
+                <p class="eyebrow">LISTA DE RESULTADOS</p>
+                <h2 id="results-title"><span id="result-count">0</span> <span id="result-label">referencias</span> para revisar</h2>
+              </div>
+              <span class="results-filter-state" id="results-filter-state">sin filtros</span>
+            </div>
+            <div class="results-list" id="results-list" aria-live="polite"></div>
+            <div class="empty-state" id="empty-state" hidden>
+              <span class="empty-mark" aria-hidden="true">∅</span>
+              <h3>No encontramos esa combinación</h3>
+              <p>Prueba con una categoría más amplia o limpia los filtros para volver a ver toda la zona.</p>
+              <button class="button button-secondary" id="empty-reset" type="button">Ver todas las referencias</button>
+            </div>
+          </section>
+        </section>
+
+        <section class="provenance" aria-labelledby="provenance-title">
+          <div class="provenance-title">
+            <span class="note-index">02</span>
+            <h2 id="provenance-title">Cómo leer este mapa</h2>
+          </div>
+          <div class="provenance-copy">
+            <p><strong>Referencia web</strong> significa que la categoría aparece en un directorio, catálogo o publicación pública enlazada. No confirma que todos los puestos estén registrados, que exista stock o que el precio sea menor.</p>
+            <p class="mono-copy">siguiente paso → sumar establecimientos individuales con fuente, fecha y verificación en campo</p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <span>buscando barato / lima centro</span>
+        <span>prototipo conceptual · 2026</span>
+      </footer>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
