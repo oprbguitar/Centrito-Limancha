@@ -197,7 +197,8 @@ select { appearance: none; background-image: linear-gradient(45deg, transparent 
 .site-footer { min-height: 72px; display: flex; justify-content: space-between; align-items: center; gap: var(--sp-4); color: var(--ink-soft); font: 700 var(--fs-caption)/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; }
 
 @media (min-width: 1181px) {
-  .explorer { height: clamp(680px, calc(100vh - 240px), 800px); min-height: 0; }
+  /* El rail de filtros necesita más altura que la ventana corta del navegador. */
+  .explorer { height: 820px; min-height: 0; }
   .results-panel, .results-list { min-height: 0; }
   .map-wrap, #map { min-height: 0; }
 }
