@@ -14,6 +14,10 @@ Publicado en: https://oprbguitar.github.io/Centrito-Limancha/
 | **Filtros** | Búsqueda por nombre, giro, razón social o producto (una palabra como “foco led” se traduce al giro *Ferretería y electricidad*); canal por mayor, por menor o galería; tipo de producto; RUC activo y habido; con contacto; con nombre. El estado del filtro queda en la URL (`#zona=gamarra&tipo=textil`). | — |
 | **Contraste SUNAT** | Los comercios OSM que la base *Análisis de empresas* ya había conciliado con un RUC 20 muestran razón social, estado, condición de domicilio y actividad CIIU. | Padrón RUC SUNAT (corte 16/08/2026) |
 | **Verificador de precios** | Escribe un producto y el precio que te ofrecen: la página lo compara con el mínimo, la mediana y el máximo publicados con stock en Promart, Plaza Vea, Oechsle y Coolbox, y enlaza la búsqueda en vivo en cada tienda y en Mercado Libre. | Catálogos públicos VTEX, recogidos a diario |
+| **Webs y redes verificadas** | Cada web se publica solo si la propia página confirma el comercio (contiene su RUC o las palabras distintivas de su nombre); de ahí salen también Facebook e Instagram. Los comercios sin web verificada muestran búsquedas listas en Google, Facebook e Instagram. | Sitios oficiales, verificados uno por uno |
+| **Empresas registradas (capa opcional)** | Empresas activas y habidas del rubro comercio cuya dirección fiscal se ubicó a nivel de calle. Se dibujan como círculo hueco: es una dirección declarada, no un local verificado. | Padrón SUNAT + geocodificación OSM |
+| **Licencias municipales** | Si el RUC aparece en las licencias de funcionamiento otorgadas por la Municipalidad de Lima, la ficha lo muestra con su estado, fecha y área. | [Datos abiertos MML](https://www.datosabiertos.gob.pe/dataset/licencias-de-funcionamiento-otorgadas-2020-2025) |
+| **Mapa ampliable** | Botón *Ampliar mapa* (o Escape para salir) para recorrer la zona a pantalla completa, con la ficha debajo. | — |
 
 ### Lo que la página no hace (a propósito)
 
@@ -53,10 +57,14 @@ npm run dev
 Renovar los datos a mano:
 
 ```bash
-node scripts/scrape.mjs              # comercios + precios
+node scripts/scrape.mjs              # comercios (OSM) + precios (tiendas)
 node scripts/scrape.mjs --solo precios
+node scripts/licencias.mjs           # licencias de funcionamiento (MML)
 python scripts/contraste_sunat.py    # requiere la base de Análisis de empresas
+python scripts/webs_verificadas.py   # verifica webs y redes + capa de empresas SUNAT
 ```
+
+`webs_verificadas.py` solo publica una web cuando la página responde y contiene el RUC o el nombre del comercio; además genera `public/data/empresas-sunat.json`. Para sumar una web que encontraste a mano, agrégala a `SEMILLAS` en ese script: igual tiene que pasar la verificación.
 
 `contraste_sunat.py` lee por defecto `C:/Users/oprbg/Documents/COPIA de DB/empresas_full.db` en modo solo lectura (`--db` para otra ruta). Esa base no está en el repositorio, por eso el contraste **no** se renueva en CI: vuelve a correrlo cuando actualices el padrón en *Análisis de empresas* y haz commit del JSON.
 
@@ -82,3 +90,4 @@ Cada push a `main`, cada día a las 06:00 (hora de Lima) y el botón *Run workfl
 
 - v0.1: prototipo con 6 corredores comerciales escritos a mano.
 - v0.2 (11/09/2026): barrido OSM en vivo (1.511 comercios), contraste con 296 comercios del padrón SUNAT, verificador con 382 precios reales de 4 tiendas, zonas, filtros por canal y giro, actualización diaria en CI.
+- v0.3 (11/09/2026): barrido ampliado con talleres (1.536 comercios), 276 webs verificadas (149 con Facebook o Instagram), capa opcional de 328 empresas SUNAT geolocalizadas, licencias municipales, mapa ampliable, logo e identidad Centrito Limancha.

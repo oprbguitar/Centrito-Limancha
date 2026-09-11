@@ -36,7 +36,9 @@ jobs:
       - name: Refresh data (OSM + precios)
         # Si una fuente falla, el script conserva el corte versionado en public/data.
         continue-on-error: true
-        run: node scripts/scrape.mjs
+        run: |
+          node scripts/scrape.mjs
+          node scripts/licencias.mjs
 
       - name: Build site
         run: npm run build

@@ -56,6 +56,22 @@ const SHOP_LABELS = {
   travel_agency: 'Agencia de viajes', ticket: 'Venta de entradas', florist: 'Florería', pet: 'Mascotas', bicycle: 'Bicicletas'
 };
 
+// Talleres: en Gamarra y Barrios Altos buena parte del comercio está mapeado como craft.
+const CRAFT_LABELS = {
+  tailor: 'costura', dressmaker: 'confección', shoemaker: 'calzado', sewing: 'costura', embroiderer: 'bordado',
+  electrician: 'electricidad', plumber: 'gasfitería', carpenter: 'carpintería', metal_construction: 'metalmecánica',
+  painter: 'pintura', locksmith: 'cerrajería', glaziery: 'vidriería', upholsterer: 'tapicería',
+  electronics_repair: 'electrónica', jeweller: 'joyería', photographer: 'fotografía', signmaker: 'letreros',
+  key_cutter: 'llaves', watchmaker: 'relojería', bakery: 'panadería', caterer: 'catering'
+};
+const CRAFT_FAMILIES = {
+  tailor: 'textil', dressmaker: 'textil', shoemaker: 'textil', sewing: 'textil', embroiderer: 'textil', jeweller: 'textil',
+  electrician: 'ferreteria', plumber: 'ferreteria', metal_construction: 'ferreteria', painter: 'ferreteria',
+  locksmith: 'ferreteria', glaziery: 'ferreteria', key_cutter: 'ferreteria',
+  carpenter: 'hogar', upholsterer: 'hogar', electronics_repair: 'tecnologia', watchmaker: 'tecnologia',
+  photographer: 'libreria', signmaker: 'libreria', bakery: 'abarrotes', caterer: 'abarrotes'
+};
+
 const WHOLESALE_NAME = /(distribuidora|distribuciones|importadora|importaciones|mayorista|por mayor|al por mayor|comercializadora)/i;
 const CIIU_WHOLESALE = /VENTA AL POR MAYOR/i;
 
@@ -79,7 +95,7 @@ function familyFor(shopTag) {
 
 export function overpassQuery(bbox = BBOX) {
   const b = `${bbox.s},${bbox.w},${bbox.n},${bbox.e}`;
-  return `[out:json][timeout:60];(nwr["shop"](${b});nwr["amenity"="marketplace"](${b});nwr["wholesale"](${b}););out center meta;`;
+  return `[out:json][timeout:90];(nwr["shop"](${b});nwr["amenity"="marketplace"](${b});nwr["wholesale"](${b});nwr["craft"](${b}););out center meta;`;
 }
 
 export const OVERPASS_ENDPOINTS = [
@@ -96,9 +112,10 @@ export function normalizeElement(element) {
   if (lat == null || lon == null) return null;
   if (tags.shop === 'vacant' || tags.disused || tags['disused:shop']) return null;
 
-  const shopTag = tags.amenity === 'marketplace' ? 'marketplace' : (tags.shop || (tags.wholesale ? 'wholesale' : 'yes'));
-  const typeLabel = SHOP_LABELS[shopTag] || shopTag.replace(/_/g, ' ');
-  const family = familyFor(shopTag);
+  const craft = !tags.shop && tags.amenity !== 'marketplace' && tags.craft ? tags.craft : '';
+  const shopTag = craft ? `craft:${craft}` : (tags.amenity === 'marketplace' ? 'marketplace' : (tags.shop || (tags.wholesale ? 'wholesale' : 'yes')));
+  const typeLabel = craft ? `Taller de ${CRAFT_LABELS[craft] || craft.replace(/_/g, ' ')}` : (SHOP_LABELS[shopTag] || shopTag.replace(/_/g, ' '));
+  const family = craft ? (CRAFT_FAMILIES[craft] || 'otros') : familyFor(shopTag);
 
   let channel = 'minorista';
   let channelReason = 'Sin señal de venta mayorista';

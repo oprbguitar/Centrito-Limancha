@@ -9,7 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231B1B2F'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='monospace' font-size='13' font-weight='700' fill='white'%3Ebb%3C/text%3E%3C/svg%3E" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -17,9 +18,9 @@
     <div class="site-shell">
       <header class="commandbar">
         <a class="brand" href="./" aria-label="Buscando barato, inicio">
-          <span class="brand-mark" aria-hidden="true">bb</span>
+          <img class="brand-mark" src="logo-mark.png" width="44" height="44" alt="" />
           <span>
-            <span class="brand-name">buscando barato</span>
+            <span class="brand-name">Centrito Limancha</span>
             <span class="brand-meta">comercio y distribución · lima centro</span>
           </span>
         </a>
@@ -72,6 +73,11 @@
               <label class="check"><input type="checkbox" id="only-sunat" /> <span>RUC activo y habido <small>padrón SUNAT</small></span></label>
               <label class="check"><input type="checkbox" id="only-contact" /> <span>Con teléfono o web</span></label>
               <label class="check"><input type="checkbox" id="only-named" /> <span>Con nombre registrado</span></label>
+              <label class="check"><input type="checkbox" id="only-web" /> <span>Con web o redes verificadas</span></label>
+            </div>
+            <div class="facet-group">
+              <h2 class="facet-title">Capas</h2>
+              <label class="check"><input type="checkbox" id="show-sunat" /> <span>Empresas registradas <small>SUNAT, dirección fiscal geolocalizada</small></span></label>
             </div>
             <button class="text-button" id="reset-filters" type="button">Limpiar filtros</button>
           </aside>
@@ -103,10 +109,12 @@
           <section class="map-panel" aria-label="Mapa y detalle">
             <div class="map-wrap">
               <div id="map" role="application" aria-label="Mapa de Lima Centro con los comercios filtrados"></div>
+              <button class="map-expand" id="map-expand" type="button" aria-pressed="false">⤢ Ampliar mapa</button>
               <div class="map-legend" aria-label="Leyenda">
                 <span><i class="dot dot-mayorista" aria-hidden="true"></i> Por mayor</span>
                 <span><i class="dot dot-minorista" aria-hidden="true"></i> Por menor</span>
                 <span><i class="dot dot-galeria" aria-hidden="true"></i> Galería o mercado</span>
+                <span><i class="dot dot-sunat" aria-hidden="true"></i> Empresa registrada</span>
               </div>
             </div>
             <article class="detail" id="detail" aria-live="polite">
@@ -143,7 +151,7 @@
       </main>
 
       <footer class="site-footer">
-        <span>buscando barato / lima centro</span>
+        <span>Creado por Pierre xD</span>
         <span>Mapa y comercios © colaboradores de <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> (ODbL)</span>
       </footer>
     </div>

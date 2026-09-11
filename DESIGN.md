@@ -9,7 +9,8 @@
 
 ## Dirección elegida
 
-- **Arquetipo:** barra de comando (fecha + estado del barrido) → búsqueda con zona y canal → franja de zonas con conteos reales → tabla maestra + mapa + ficha de detalle. El verificador es una pestaña con veredicto y tabla de ofertas.
+- **Arquetipo:** barra de comando (logo + fecha + estado del barrido) → búsqueda con zona y canal → franja de zonas con conteos reales → tabla maestra + mapa + ficha de detalle. El verificador es una pestaña con veredicto y tabla de ofertas.
+- **Marca:** el emblema del faro de *Centrito Limancha* (recortado del logo original) actúa como marca y favicon. El logotipo completo, de fondo oscuro y con brillos, no se usa dentro de la interfaz: rompería la paleta arena e índigo.
 - **Alternativas descartadas:** mapa a pantalla completa con cajón (esconde la comparación), tablero de tarjetas por zona (repetitivo, poca densidad), asistente paso a paso (lento para uso recurrente).
 - **Tipografía:** Space Grotesk (titulares, controles), Noto Sans (lectura), Space Mono (cifras, estados, metadatos).
 - **Paleta:** arena + índigo. El índigo marca acción, selección y “por mayor”; el ocre marca “por menor”; la tinta marca galerías y mercados. Verde y rojo solo para el estado SUNAT y el veredicto de precio.
@@ -32,6 +33,13 @@
 --sp-1..7: 4 / 8 / 12 / 16 / 24 / 32 / 48 px
 --radius: 2px;  --radius-pill: 999px;  --dur: 140ms;  --control-h: 44px;
 ```
+
+## Distinguir fuentes sin recargar el color
+
+- Comercio mapeado en OSM: punto **relleno** del color de su canal.
+- Empresa del padrón SUNAT (capa opcional): punto **hueco**, mismo color de canal. La forma —no el color— dice que es una dirección declarada.
+- Web verificada: marca `web` en la fila, en índigo; en la ficha se explica cómo se verificó y cuándo.
+- El mapa se amplía a pantalla completa con *Ampliar mapa* y se cierra con Escape; la ficha queda debajo para no perder el contexto.
 
 ## Estados
 
